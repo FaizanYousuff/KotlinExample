@@ -3,15 +3,163 @@
 package com.example.kotlinexample
 
 
-import com.example.kotlinexample.model.User
-import com.example.kotlinexample.model.UserJava
+import com.example.kotlinexample.interfaces.PersonInfoProvider
+import com.example.kotlinexample.model.*
 import java.lang.NumberFormatException
 import java.util.*
 
 
 fun main(args: Array<String>) {
 
-    println("Hello Faizan ");
+
+
+    println("Single expression function")
+    println(getGreetings())
+
+    println("Collections")
+    var interestOfThings = arrayOf("Kotlin","JAVA","ReactJS")
+
+    println(interestOfThings.size)
+    println(interestOfThings[2])
+
+    for (thing in interestOfThings){
+        println(thing)
+    }
+
+    println("iterating using ForEach higher order function")
+
+    interestOfThings.forEach {
+        println(it)
+    }
+
+    println("iterating using ForEachIndexed higher order function")
+
+    interestOfThings.forEachIndexed { index, s ->
+        println("Position $index  value $s ")
+    }
+
+    println("iterating MAPS using ForEach higher order function")
+    // TODO by default all collections are immutable
+    //  ,if mutable collections have to be created we need to call Mutable collections api
+    var maps = mutableMapOf(1 to "ONE" ,2 to "TWO")
+
+    maps.put(3,"Three")
+    maps.forEach { key, value ->
+        println("KEY $key and its Value is $value")
+    }
+
+
+
+    println("varArg parameter , its array of string of variable size")
+
+    sayhello("HI ","Mohammed", "FAIZAN" )
+
+    // here using spread operator so that collection can be passed to var arg
+    sayhello("HI ",*interestOfThings )
+
+
+    println("Classes")
+
+    var person = Person("mohammed","Faizan")
+
+    println("person first name ${person.lastName} and last name ${person.firstName}")
+
+    println("Creating secondary constructor and calling ");
+    person = Person()
+
+
+    println("using default values in contructor so that multipl contrucors will not be required ");
+
+    person = Person()
+    println("person first name ${person.lastName} and last name ${person.firstName}")
+
+
+    println("Getter and setters ");
+    println("Default Getter and setters will be generated for VAR");
+    println("Default Getter ONLY will be generated for VAL");
+
+    println("Overriding default setters and getters");
+   // person.nickName =" new Nick name"
+    println("printing new Nick name ${person.nickName}")
+
+    person.printInfo()
+    println("Access specifiers ");
+    println("By default its public in kotlin for all methods and variables , we modify as private , protected and internal(Default)");
+
+
+    println("INTERFACES ");
+
+    println("is  keyword is used as equivalent of instance of ");
+    println("as  keyword is used as equivalent type casting ");
+
+    println("Inheritance");
+
+
+    println("by default classes are closed / final hence cannot be inheritated , ");
+
+    println("open key word must be added if class has to be inherited , samme applies for methods and vraiables also ");
+
+
+    println()
+    println()
+    println("Object Expression");
+
+    var personInfoProvider = object  : PersonInfoProvider{
+        override val providerInfo: String
+            get() = TODO("Not yet implemented")
+
+        override fun printInfo(person: Person) {
+
+        }
+
+        fun printInfo(){
+            println("inside annonymous inner class created using object keyword ")
+
+        }
+    }
+    personInfoProvider.printInfo()
+
+
+    println()
+    println()
+    println("Companion Objects");
+    println("Companion Objects has access to private members of enclosing class");
+
+    // here wer are suing companion object to access private constructor
+    var entity = Entity.Companion.create()
+
+
+    println("Accessing Companion Object property just like static variable");
+    Entity.id
+    println("Companion Object are just like classes and implement interfaces ");
+
+
+    println()
+    println()
+    println("Extension Functions");
+    entity.extensionFunction()
+    println("Extension variable "+entity.extentionVaribale);
+
+    println()
+    println()
+    println("Advanced Functions");
+
+    println("higer order functions either return FUNCTIONS or take functions as PARAMETERS ");
+
+    var listOflangs = listOf("Kotlin","Java","React","xamarin")
+    printFilteredString(listOflangs,{it.startsWith("J")})
+    println("As per lamda rules if last parmeter is function it can be written outside ");
+    printFilteredString(listOflangs){
+        it.startsWith("K")
+    }
+    println("passing null as parameter for higher order function ");
+
+    printFilteredString2(listOflangs,null)
+
+
+
+
+    println("Hello Faizan Telusko");
 
     /**
      * adding todo hust for sake of colours
@@ -59,7 +207,7 @@ fun main(args: Array<String>) {
     var num2: Int = 10
 
     // braces after $ not required for single variables
-    println("Addition of $num1 and $num2 is $num1+num2")
+    println("Addition of $num1 and $num2 is ${num1+num2}")
 
 
 
@@ -127,6 +275,12 @@ fun main(args: Array<String>) {
     println(s1)
 
 
+    println("using when operator for comparing objects")
+
+    when(user){
+        is User -> println("it is instance of user")
+        else ->println("it is NOT instance of user")
+    }
 
 
 
@@ -268,7 +422,7 @@ fun main(args: Array<String>) {
     println("####  Operator OverLoading ####")
     // https://kotlinlang.org/docs/reference/operator-overloading.html
 
-    var u6 = u3 + u4;
+    var u6 = u3 + u4;// Using Operator keyword
 
     println("Adding two object using operator overloading   ${u6.name}")
 
@@ -307,13 +461,14 @@ fun main(args: Array<String>) {
     println("Faizan think method called ")
     f.think()
 
+    println("Abstract there is no difference when compared to JAVA ")
 
     println()
     println("#### USE OF DATA AND OBJECT KEYWORD  ####")
 
-    println("Data keyword will override toString, hasCode and clone methods example Books class")
+    println("Data keyword will override toString(), hasCode() and clone() methods example Books class")
 
-    println("OBJECT keyword will make class as singleton and we can acces using class name example BooksShelf class" )
+    println("OBJECT keyword will make class as SINGLETON and we can access using class name example BooksShelf class" )
     Bookshelf.books.add(Books("JAVA",2000))
     Bookshelf.books.add(Books(price = 2500,title = "KOTLIN"))
     Bookshelf.showBooks()
@@ -434,6 +589,7 @@ infix fun User.plus1(u: User): User {
 // TODO Inheritance Example
 // By Defauly all classes and methods are final hence open should be added if it has to be inherited by other classes
 open class Human constructor(age :Int){
+    // Init is like code block of primary constructor
     init {
         println("HUMAN primary constructor or init block called and age is $age")
     }
@@ -485,6 +641,15 @@ class A{
         }
     }
 
+}
+
+fun getGreetings() :String = "Hello Faizan"
+
+fun sayhello(greetings :String , vararg itemsToGreet :String){
+
+    itemsToGreet.forEach {
+        println("$greetings $it")
+    }
 }
 
 
